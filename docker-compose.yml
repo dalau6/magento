@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:12-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  magento:
+    build: magento
+    command: python manage.py runserver 0.0.0.0:8000
+
+    volumes:
+      - ./magento:/src
+
+    ports:
+      - "8000:8000"
+    # environment:
+    #   - SECRET_KEY=changemeinprod
+    restart: on-failure
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
